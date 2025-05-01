@@ -14,11 +14,11 @@ unsigned char previous_pixel_a;
 unsigned char chunk_index = 0;
 unsigned  int chunk_output = 0;
 
-void initialize_previous_pixel(unsigned char r, unsigned char g,unsigned char b,unsigned char a){
-	previous_pixel_r = r;
-	previous_pixel_g = g;
-	previous_pixel_b = b;
-	previous_pixel_a = a;
+void initialize_previous_pixel(unsigned char * r, unsigned char * g,unsigned char * b,unsigned char * a){
+	previous_pixel_r = *r;
+	previous_pixel_g = *g;
+	previous_pixel_b = *b;
+	previous_pixel_a = *a;
 }
 
 void output_chunk8(unsigned char input){
@@ -137,7 +137,7 @@ unsigned char get_hash(unsigned char * r, unsigned char * g,unsigned char * b,un
 
 unsigned char index_chunk(unsigned char * r, unsigned char * g,unsigned char * b,unsigned char * a){
 	unsigned  int hash = get_hash(r,g,b,a);
-	if(compare_pixels(RA[hash][0],RA[hash][1],RA[hash][2],RA[hash][3],r,g,b,a)){
+	if(compare_pixels(&RA[hash][0],&RA[hash][1],&RA[hash][2],&RA[hash][3],r,g,b,a)){
 		unsigned char chunk = hash & 63;
 		//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
 		output_chunk8(chunk);
@@ -156,10 +156,10 @@ unsigned char index_chunk(unsigned char * r, unsigned char * g,unsigned char * b
 /*============================================
  * DIFF CHUNK
  * ==========================================*/
-unsigned char diff_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a){
-	unsigned char dr = 2 + r - previous_pixel_r;
-	unsigned char dg = 2 + g - previous_pixel_g;
-	unsigned char db = 2 + b - previous_pixel_b;
+unsigned char diff_chunk(unsigned char * r, unsigned char * g,unsigned char * b,unsigned char * a){
+	unsigned char dr = 2 + *r - previous_pixel_r;
+	unsigned char dg = 2 + *g - previous_pixel_g;
+	unsigned char db = 2 + *b - previous_pixel_b;
 	//check if the differences are within bounds
 	if(dr > 3){
 		return 0;
@@ -184,10 +184,10 @@ unsigned char diff_chunk(unsigned char r, unsigned char g,unsigned char b,unsign
 	output_chunk8(chunk);
 
 	//housekeeping
-	previous_pixel_r = r;
-	previous_pixel_g = g;
-	previous_pixel_b = b;
-	previous_pixel_a = a;
+	previous_pixel_r = *r;
+	previous_pixel_g = *g;
+	previous_pixel_b = *b;
+	previous_pixel_a = *a;
 	return 1;
 }
 
@@ -195,16 +195,16 @@ unsigned char diff_chunk(unsigned char r, unsigned char g,unsigned char b,unsign
  * LUMA CHUNK
  * ==========================================*/
 
-unsigned char luma_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a){
-	unsigned char dg = 32 + g - previous_pixel_g;	
+unsigned char luma_chunk(unsigned char * r, unsigned char * g,unsigned char * b,unsigned char * a){
+	unsigned char dg = 32 + *g - previous_pixel_g;	
 	if(dg > 63){
 		return 0;
 	}
-	unsigned char dr_dg = 8 + (r - previous_pixel_r) - dg - 32;
+	unsigned char dr_dg = 8 + (*r - previous_pixel_r) - dg - 32;
 	if(dr_dg > 15){
 		return 0;
 	}
-	unsigned char db_dg = 8 + (b - previous_pixel_b) - dg - 32;
+	unsigned char db_dg = 8 + (*b - previous_pixel_b) - dg - 32;
 	if(db_dg > 15){
 		return 0;
 	}
@@ -216,28 +216,28 @@ unsigned char luma_chunk(unsigned char r, unsigned char g,unsigned char b,unsign
 	//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
 	output_chunk8(chunk);
 
-	previous_pixel_r = r;
-	previous_pixel_g = g;
-	previous_pixel_b = b;
-	previous_pixel_a = a;
+	previous_pixel_r = *r;
+	previous_pixel_g = *g;
+	previous_pixel_b = *b;
+	previous_pixel_a = *a;
 	return 1;
 }
 
 /*============================================
  * RGB CHUNK
  * ==========================================*/
-unsigned char rgb_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a){
-	if(previous_pixel_a == a){
+unsigned char rgb_chunk(unsigned char * r, unsigned char * g,unsigned char * b,unsigned char * a){
+	if(previous_pixel_a == *a){
 		unsigned  int chunk = 0xFE000000;
-		chunk = chunk + (r << 16) + (g << 8) + b;
+		chunk = chunk + (*r << 16) + (*g << 8) + *b;
 		//chunk = reverse_endian(chunk);
 		//fwrite(&chunk, sizeof(unsigned  int), 1, fptr);
 		output_chunk32(chunk);
 
-		previous_pixel_r = r;
-		previous_pixel_g = g;
-		previous_pixel_b = b;
-		previous_pixel_a = a;
+		previous_pixel_r = *r;
+		previous_pixel_g = *g;
+		previous_pixel_b = *b;
+		previous_pixel_a = *a;
 		return 1;
 	}
 	return 0;
@@ -246,8 +246,8 @@ unsigned char rgb_chunk(unsigned char r, unsigned char g,unsigned char b,unsigne
 /*============================================
  * RGBA CHUNK
  * ==========================================*/
-void rgba_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a){
-	unsigned  int chunk = (r << 24) + (g << 16) + (b << 8) + a;
+void rgba_chunk(unsigned char * r, unsigned char * g,unsigned char * b,unsigned char * a){
+	unsigned  int chunk = (*r << 24) + (*g << 16) + (*b << 8) + *a;
 	//chunk = reverse_endian(chunk);
 	unsigned char tag = 0xFF;
 	//fwrite(&tag, sizeof(unsigned char), 1, fptr);
@@ -282,24 +282,19 @@ void end_marker(){
 /*============================================
  * RUN CODE
  * ==========================================*/
-void output_chunk(unsigned int pixel_data){
-	unsigned char r = (pixel_data >> 24);
-	unsigned char g = (pixel_data >> 16) & 0xFF;
-	unsigned char b = (pixel_data >> 8) & 0xFF;
-	unsigned char a = pixel_data & 0xFF;
-
-	if(run_chunk((pixel_data >> 24),(pixel_data >> 16) & 0xFF,(pixel_data >> 8) & 0xFF,pixel_data & 0xFF) == 1){
+void output_chunk(unsigned char * r,unsigned char * g,unsigned char * b,unsigned char * a){
+	if(run_chunk(r,g,b,a) == 1){
 		return;	
 	}
-	else if(index_chunk((pixel_data >> 24),(pixel_data >> 16) & 0xFF,(pixel_data >> 8) & 0xFF,pixel_data & 0xFF) == 1){
+	else if(index_chunk(r,g,b,a) == 1){
 		return;
 	}
-	else if(diff_chunk((pixel_data >> 24),(pixel_data >> 16) & 0xFF,(pixel_data >> 8) & 0xFF,pixel_data & 0xFF) == 1){
+	else if(diff_chunk(r,g,b,a) == 1){
 		return;
 	}
-	else if(luma_chunk((pixel_data >> 24),(pixel_data >> 16) & 0xFF,(pixel_data >> 8) & 0xFF,pixel_data & 0xFF) == 1){
+	else if(luma_chunk(r,g,b,a) == 1){
 		return;
 	}
-	rgb_chunk((pixel_data >> 24),(pixel_data >> 16) & 0xFF,(pixel_data >> 8) & 0xFF,pixel_data & 0xFF);
+	rgb_chunk(r,g,b,a);
 	return;
 }
