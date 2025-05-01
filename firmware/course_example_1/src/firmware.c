@@ -33,6 +33,10 @@ void main(void) {
 		unsigned char g = (data >> 16) & 0xFF;
 		unsigned char b = (data >> 8) & 0xFF;
 		unsigned char a = data & 0xFF;
+		output_chunk32(0xcafebabe);
+		output_chunk8(r);
+		output_chunk8(g);
+		output_chunk8(b);
 		output_chunk(&r, &g, &b, &a);	
 	}
 
