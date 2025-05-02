@@ -16,6 +16,11 @@ void irq_handler(unsigned int cause) {
 	//put interupts here	
 }
 
+unsigned int r;
+unsigned int g;
+unsigned int b;
+unsigned int a;
+
 void main(void) {
 	//initialize pixels
 	//initialize_previous_pixel(0x00, 0x00, 0x00, 0xFF);
@@ -29,15 +34,14 @@ void main(void) {
 	//for(unsigned char i = 0; i < sw_mult(width,height)-1; i++){
 	for(unsigned char i = 0; i < 64; i++){
 		unsigned int data = SENSOR_fetch();
-		unsigned char r = (data >> 24);
-		unsigned char g = (data >> 16) & 0xFF;
-		unsigned char b = (data >> 8) & 0xFF;
-		unsigned char a = data & 0xFF;
 		output_chunk32(0xcafebabe);
+		r = (data >> 24);
+		g = (data >> 16) & 0xFF;
+		b = (data >> 8) & 0xFF;
 		output_chunk8(r);
-		output_chunk8(g);
-		output_chunk8(b);
-		output_chunk(&r, &g, &b, &a);	
+		a = data & 0xFF;
+		output_chunk8(r);
+		output_chunk(r, g, b, a);	
 	}
 
 	end_marker();
