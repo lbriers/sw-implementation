@@ -24,8 +24,8 @@ unsigned int a;
 void main(void) {
 	//initialize pixels
 	//initialize_previous_pixel(0x00, 0x00, 0x00, 0xFF);
-	unsigned char width = SENSOR_get_width();	
-	unsigned char height = SENSOR_get_height();	
+	unsigned int width = SENSOR_get_width();	
+	unsigned int height = SENSOR_get_height();	
 	output_header(width, height,3,0);
 	
 	//while(SENSOR_SR & SENSOR_SR_FIRST == 0x00){
@@ -34,13 +34,11 @@ void main(void) {
 	//for(unsigned char i = 0; i < sw_mult(width,height)-1; i++){
 	for(unsigned char i = 0; i < 64; i++){
 		unsigned int data = SENSOR_fetch();
-		output_chunk32(0xcafebabe);
 		r = (data >> 24);
 		g = (data >> 16) & 0xFF;
 		b = (data >> 8) & 0xFF;
-		output_chunk8(r);
 		a = data & 0xFF;
-		output_chunk8(r);
+		
 		output_chunk(r, g, b, a);	
 	}
 

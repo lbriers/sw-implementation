@@ -14,22 +14,22 @@ struct rgba_pixel {
 	unsigned char a;
 };
 
-bool compare_pixels(unsigned char r1, unsigned char g1,unsigned char b1,unsigned char a1,unsigned char r2, unsigned char g2,unsigned char b2,unsigned char a2);
-void initialize_previous_pixel(unsigned char r, unsigned char g,unsigned char b,unsigned char a);
+bool compare_pixels(unsigned int r1, unsigned int g1,unsigned int b1,unsigned int a1,unsigned int r2, unsigned int g2,unsigned int b2,unsigned int a2);
+void initialize_previous_pixel(unsigned int r, unsigned int g,unsigned int b,unsigned int a);
 
 //### chunks ###
-unsigned char run_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a);
-unsigned char get_hash(unsigned char r , unsigned char g,unsigned char b,unsigned char a);
-unsigned char index_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a);
-unsigned char diff_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a);
-unsigned char luma_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a);
-unsigned char rgb_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a);
-void rgba_chunk(unsigned char r, unsigned char g,unsigned char b,unsigned char a);
+unsigned int run_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a);
+unsigned int get_hash(unsigned int r , unsigned int g,unsigned int b,unsigned int a);
+unsigned int index_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a);
+unsigned int diff_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a);
+unsigned int luma_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a);
+unsigned int rgb_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a);
+void rgba_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a);
 
 void end_marker();
-void output_header(unsigned  int width, unsigned  int height, unsigned char channels, unsigned char colorspace);
+void output_header(unsigned  int width, unsigned  int height, unsigned int channels, unsigned int colorspace);
 
-void output_chunk(unsigned char r,unsigned char g,unsigned char b,unsigned char a);
+void output_chunk(unsigned int r,unsigned int g,unsigned int b,unsigned int a);
 void output_chunk8(unsigned char input);
 void output_chunk32(unsigned int input);
 
