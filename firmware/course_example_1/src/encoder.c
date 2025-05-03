@@ -119,8 +119,10 @@ unsigned int run_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned in
 	}
 	else{
 		if(RLE > 0){
-			unsigned int tag = 192;
-			unsigned int chunk = tag + RLE-1;
+			//unsigned int tag = 192;
+			//unsigned int chunk = tag + RLE-1;
+			unsigned int chunk = 192 + RLE-1;
+			//print_chr(RLE & 0xFF);
 			//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
 			//output_chunk8(chunk & 0xFF);
 			print_chr(chunk & 0xFF);
