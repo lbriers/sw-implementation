@@ -65,17 +65,25 @@ unsigned  int reverse_endian(unsigned  int input){
 }
 
 void output_header(unsigned  int width, unsigned  int height, unsigned int channels, unsigned int colorspace){
-	//initialize_previous_pixel(0x00, 0x00, 0x00, 0xFF);
-	output_chunk8('q');
-	output_chunk8('o');
-	output_chunk8('i');
-	output_chunk8('f');
+	initialize_previous_pixel(0x00, 0x00, 0x00, 0xFF);
+	print_chr('q');
+	print_chr('o');
+	print_chr('i');
+	print_chr('f');
 
-	output_chunk32(width);
-	output_chunk32(height);
+	//output_chunk32(width);
+	print_chr((width >> 24) & 0xff);
+	print_chr((width >> 16) & 0xff);
+	print_chr((width >> 8) & 0xff);
+	print_chr(width & 0xff);
+	//output_chunk32(height);
+	print_chr((height >> 24) & 0xff);
+	print_chr((height >> 16) & 0xff);
+	print_chr((height >> 8) & 0xff);
+	print_chr(height & 0xff);
 
-	output_chunk8(channels & 0xff);
-	output_chunk8(colorspace & 0xff);
+	print_chr(channels & 0xff);
+	print_chr(colorspace & 0xff);
 
 
 }
@@ -114,8 +122,8 @@ unsigned int run_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned in
 			unsigned int tag = 192;
 			unsigned int chunk = tag + RLE-1;
 			//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
-			output_chunk8(chunk & 0xFF);
-
+			//output_chunk8(chunk & 0xFF);
+			print_chr(chunk & 0xFF);
 			RLE = 0;
 		}
 		return 0;
@@ -136,7 +144,7 @@ unsigned int index_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned 
 	if(compare_pixels(RA[hash][0],RA[hash][1],RA[hash][2],RA[hash][3],r,g,b,a)){
 		unsigned int chunk = hash & 63;
 		//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
-		output_chunk8(chunk & 0xff);
+		print_chr(chunk & 0xff);
 		previous_pixel_r = r;
 		previous_pixel_g = g;
 		previous_pixel_b = b;
@@ -177,7 +185,7 @@ unsigned int diff_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned i
 	unsigned int chunk = dr + dg + db + tag;
 	////output value to file
 	//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
-	output_chunk8(chunk & 0xFF);
+	print_chr(chunk & 0xFF);
 
 	//housekeeping
 	previous_pixel_r = r;
@@ -213,10 +221,10 @@ unsigned int luma_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned i
 	unsigned int chunk = 128;
 	chunk = (chunk + (dg & 63));
 	//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
-	output_chunk8(chunk & 0xff);
+	print_chr(chunk & 0xff);
 	chunk = ((dr_dg & 15) << 4 ) + (db_dg & 15);
 	//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
-	output_chunk8(chunk & 0xff);
+	print_chr(chunk & 0xff);
 
 	previous_pixel_r = r;
 	previous_pixel_g = g;
@@ -230,9 +238,13 @@ unsigned int luma_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned i
  * ==========================================*/
 unsigned int rgb_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a){
 	if(previous_pixel_a == a){
-		unsigned int chunk = 0xFE000000;
-		chunk = chunk + (r << 16) + (g << 8) + b;
-		output_chunk32(chunk);
+		//unsigned int chunk = 0xFE000000;
+		//chunk = chunk + (r << 16) + (g << 8) + b;
+		//output_chunk32(chunk);
+		print_chr(0xFE);
+		print_chr(r & 0xff);
+		print_chr(g & 0xff);
+		print_chr(b & 0xff);
 
 		previous_pixel_r = r;
 		previous_pixel_g = g;
@@ -247,15 +259,16 @@ unsigned int rgb_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned in
  * RGBA CHUNK
  * ==========================================*/
 void rgba_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a){
-	unsigned  int chunk = (r << 24) + (g << 16) + (b << 8) + a;
-	//chunk = reverse_endian(chunk);
-	unsigned int tag = 0xFF;
-	//fwrite(&tag, sizeof(unsigned char), 1, fptr);
-	output_chunk8(tag);
-	//fwrite(&chunk, sizeof(unsigned  int), 1, fptr);
-	output_chunk32(chunk);
+	//unsigned  int chunk = (r << 24) + (g << 16) + (b << 8) + a;
+	//unsigned int tag = 0xFF;
+	//output_chunk8(tag);
+	//output_chunk32(chunk);
+	print_chr(0xFF);
+	print_chr(r & 0xff);
+	print_chr(g & 0xff);
+	print_chr(b & 0xff);
+	print_chr(a & 0xff);
 
-	//previous_pixel = *pixel;
 	return;
 }
 /*============================================
@@ -266,17 +279,19 @@ void end_marker(){
 		unsigned int tag = 192;
 		unsigned int chunk = tag + RLE-1;
 		//fwrite(&chunk, sizeof(unsigned char), 1, fptr);
-		output_chunk8(chunk & 0xff);
+		print_chr(chunk & 0xff);
 		RLE = 0;
 
 	}
-	unsigned int chunk = 0;
-	//fwrite(&chunk, sizeof(unsigned  int), 1, fptr);
-	output_chunk32(chunk);
-	chunk = 1;
-	//chunk = reverse_endian(chunk);
-	//fwrite(&chunk, sizeof(unsigned  int), 1, fptr);
-	output_chunk32(chunk);
+	print_chr(0x00);
+	print_chr(0x00);
+	print_chr(0x00);
+	print_chr(0x00);
+
+	print_chr(0x00);
+	print_chr(0x00);
+	print_chr(0x00);
+	print_chr(0x01);
 }
 
 /*============================================
