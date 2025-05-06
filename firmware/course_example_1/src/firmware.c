@@ -27,12 +27,15 @@ void main(void) {
 	unsigned int width = SENSOR_get_width();	
 	unsigned int height = SENSOR_get_height();	
 	output_header(width, height,3,0);
+	//output_header(8, 8,3,0);
 	
 	//while(SENSOR_SR & SENSOR_SR_FIRST == 0x00){
 	//	SENSOR_fetch();
 	//}
 	//for(unsigned char i = 0; i < sw_mult(width,height)-1; i++){
-	for(unsigned char i = 0; i < 64; i++){
+	//unsigned int area = sw_mult(width, height);
+	for(unsigned int i = 0; i < 3750; i++){
+	//for(unsigned int i = 0; i < 64; i++){
 		unsigned int data = SENSOR_fetch();
 		r = (data >> 24);
 		g = (data >> 16) & 0xFF;

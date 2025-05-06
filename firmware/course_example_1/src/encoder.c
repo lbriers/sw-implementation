@@ -163,6 +163,7 @@ unsigned int index_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned 
  * DIFF CHUNK
  * ==========================================*/
 unsigned int diff_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a){
+	//print_chr(0xff);
 	unsigned int dr = (2 + r - previous_pixel_r) & 0xff;
 	unsigned int dg = (2 + g - previous_pixel_g) & 0xff;
 	unsigned int db = (2 + b - previous_pixel_b) & 0xff;
@@ -202,21 +203,16 @@ unsigned int diff_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned i
  * ==========================================*/
 
 unsigned int luma_chunk(unsigned int r, unsigned int g,unsigned int b,unsigned int a){
-	//output_chunk32(0xcafebabe);
-	//output_chunk8(r & 0xFF);
-	//output_chunk8(g & 0xFF);
-	//output_chunk8(b & 0xFF);
-	//output_chunk8(a & 0xFF);
 
 	unsigned int dg = (32 + g - previous_pixel_g) & 0xff;	
 	if(dg > 63){
 		return 0;
 	}
-	unsigned int dr_dg = (8 + (r - previous_pixel_r) - dg - 32) & 0xff;
+	unsigned int dr_dg = (8 + (r - previous_pixel_r) - (g - previous_pixel_g)) & 0xff;
 	if(dr_dg > 15){
 		return 0;
 	}
-	unsigned int db_dg = (8 + (b - previous_pixel_b) - dg - 32) & 0xff;
+	unsigned int db_dg = (8 + (b - previous_pixel_b) - (g - previous_pixel_g)) & 0xff;
 	if(db_dg > 15){
 		return 0;
 	}

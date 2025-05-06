@@ -59,6 +59,8 @@ add_files -norecurse $srcpath/hdl/clock_and_reset_pynq.vhd
 
 add_files -norecurse $srcpath/hdl/riscv_microcontroller.vhd
 
+add_files -norecurse $srcpath/hdl/tb/basicIO_model.vhd
+
 # TESTBENCHES
 ################################################################################
 add_files -fileset sim_1 -norecurse $srcpath/hdl/tb/riscv_microcontroller_tb.vhd

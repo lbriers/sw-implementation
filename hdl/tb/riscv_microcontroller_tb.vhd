@@ -18,13 +18,18 @@ library work;
 entity riscv_microcontroller_tb is
     generic (
         G_DATA_WIDTH : integer := 32;
-        G_DEPTH_LOG2 : integer := 11
+        G_DEPTH_LOG2 : integer := 11;
+        FNAME_OUT_FILE : string := "/home/luca/Documents/school/master/hwsw-cd/sw-implementation/firmware/course_example_1/simulation_output.dat"
+
     );
 end entity riscv_microcontroller_tb;
 
 architecture Behavioural of riscv_microcontroller_tb is
-
-
+    --basicio
+    signal dmem_di, dmem_a : STD_LOGIC_VECTOR(31 downto 0);
+    signal dmem_we: STD_LOGIC;
+    signal cpu_clock : STD_LOGIC;
+    
     -- clock and reset
     signal sys_clock : STD_LOGIC;
     signal sys_reset : STD_LOGIC;
@@ -62,10 +67,27 @@ begin
         sys_clock => sys_clock,
         sys_reset => sys_reset,
         external_irq => external_irq,
-        gpio_leds => gpio_leds
+        gpio_leds => gpio_leds,
+        dmem_di_e => dmem_di,
+        dmem_a_e => dmem_a,
+        dmem_we_e => dmem_we,
+        cpu_clock => cpu_clock
     );
 
-
+    -------------------------------------------------------------------------------
+    -- basicIO 
+    -------------------------------------------------------------------------------
+    basicIO_model_inst00: component basicIO_model generic map(
+        G_DATA_WIDTH => G_DATA_WIDTH,
+        FNAME_OUT_FILE => FNAME_OUT_FILE
+    ) port map(
+        clock => cpu_clock,
+        reset => sys_reset,
+        di => dmem_di,
+        ad => dmem_a,
+        we => dmem_we,
+        do => open
+    );
 
     -------------------------------------------------------------------------------
     -- CLOCK

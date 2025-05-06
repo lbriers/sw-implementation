@@ -74,5 +74,9 @@ clean:
 	$(RM) $(BINARY) $(OBJECTS) $(OBJECTS_A)
 	$(RM) -f simulation_output.txt
 
-report: simulation_output.txt
-	@$(PYTHON) $(TOOLS)/parse_simulation.py $<
+report: simulation_output.dat
+	#@$(PYTHON) $(TOOLS)/parse_simulation.py $<
+	@$(PYTHON) $(TOOLS)/sim2qoi.py $<
+	xxd sim_output.qoi 
+	timg -W -U -a sim_output.qoi
+

@@ -49,7 +49,7 @@ RAM              0x00002000         0x00002000         xrw
 Linker script and memory map
 
 
-.text           0x00000000     0x1a5c
+.text           0x00000000     0x1a40
                 0x00000000                        . = 0x0
  *(.init)
  .init          0x00000000      0x230 build/start.o
@@ -58,44 +58,44 @@ Linker script and memory map
  *(.text*)
  .text          0x00000230       0x58 build/convert.o
                 0x00000230                convert
- .text          0x00000288      0xd30 build/encoder.o
+ .text          0x00000288      0xd24 build/encoder.o
                 0x00000288                initialize_previous_pixel
-                0x000002fc                output_chunk8
-                0x000003ac                output_chunk32
-                0x00000430                reverse_endian
-                0x000004c4                output_header
-                0x0000054c                compare_pixels
-                0x00000604                run_chunk
-                0x00000768                get_hash
-                0x00000834                index_chunk
-                0x000009e4                diff_chunk
-                0x00000b6c                luma_chunk
-                0x00000cf0                rgb_chunk
-                0x00000dc8                rgba_chunk
-                0x00000e54                end_marker
-                0x00000ec4                output_chunk
- .text          0x00000fb8      0x134 build/firmware.o
-                0x00000fb8                irq_handler
-                0x00000fe0                main
- .text          0x000010ec      0x590 build/math_ops.o
-                0x000010ec                umult
-                0x00001160                udiv
-                0x000011f8                umod
-                0x00001254                matrix_mult
- .text          0x0000167c      0x298 build/print.o
-                0x0000167c                print_chr
-                0x000016b4                print_str
-                0x00001708                print_hex
-                0x000017bc                print_dec
-                0x000018b8                flash_leds
- .text          0x00001914       0x60 build/sensor.o
-                0x00001914                SENSOR_fetch
- .text          0x00001974       0xe8 build/tcnt.o
-                0x00001974                TCNT_start
-                0x000019ac                TCNT_start_div8
-                0x000019e8                TCNT_start_div16
-                0x00001a24                TCNT_stop
- .text          0x00001a5c        0x0 build/start.o
+                0x000002ec                output_chunk8
+                0x00000394                output_chunk32
+                0x00000434                reverse_endian
+                0x000004c8                output_header
+                0x000005e8                compare_pixels
+                0x00000680                run_chunk
+                0x00000790                get_hash
+                0x0000081c                index_chunk
+                0x000009ac                diff_chunk
+                0x00000b08                luma_chunk
+                0x00000c80                rgb_chunk
+                0x00000d38                rgba_chunk
+                0x00000db4                end_marker
+                0x00000e50                output_chunk
+ .text          0x00000fac      0x124 build/firmware.o
+                0x00000fac                irq_handler
+                0x00000fd4                main
+ .text          0x000010d0      0x590 build/math_ops.o
+                0x000010d0                umult
+                0x00001144                udiv
+                0x000011dc                umod
+                0x00001238                matrix_mult
+ .text          0x00001660      0x298 build/print.o
+                0x00001660                print_chr
+                0x00001698                print_str
+                0x000016ec                print_hex
+                0x000017a0                print_dec
+                0x0000189c                flash_leds
+ .text          0x000018f8       0x60 build/sensor.o
+                0x000018f8                SENSOR_fetch
+ .text          0x00001958       0xe8 build/tcnt.o
+                0x00001958                TCNT_start
+                0x00001990                TCNT_start_div8
+                0x000019cc                TCNT_start_div16
+                0x00001a08                TCNT_stop
+ .text          0x00001a40        0x0 build/start.o
 
 .data           0x00002000        0x0
                 0x00000000                        . = 0x0
@@ -118,44 +118,47 @@ Linker script and memory map
  *fill*         0x00003023        0x1 
  FILL mask 0xff
 
-.eh_frame       0x00003024      0x528
+.eh_frame       0x00003024      0x52c
  .eh_frame      0x00003024       0x3c build/convert.o
- .eh_frame      0x00003060      0x26c build/encoder.o
-                                0x280 (size before relaxing)
- .eh_frame      0x000032cc       0x48 build/firmware.o
+ .eh_frame      0x00003060      0x270 build/encoder.o
+                                0x284 (size before relaxing)
+ .eh_frame      0x000032d0       0x48 build/firmware.o
                                  0x5c (size before relaxing)
- .eh_frame      0x00003314       0xa8 build/math_ops.o
+ .eh_frame      0x00003318       0xa8 build/math_ops.o
                                  0xbc (size before relaxing)
- .eh_frame      0x000033bc       0xc8 build/print.o
+ .eh_frame      0x000033c0       0xc8 build/print.o
                                  0xdc (size before relaxing)
- .eh_frame      0x00003484       0x28 build/sensor.o
+ .eh_frame      0x00003488       0x28 build/sensor.o
                                  0x3c (size before relaxing)
- .eh_frame      0x000034ac       0xa0 build/tcnt.o
+ .eh_frame      0x000034b0       0xa0 build/tcnt.o
                                  0xb4 (size before relaxing)
 
-.bss            0x0000354c      0x100
- .bss           0x0000354c        0x0 build/convert.o
- .bss           0x0000354c      0x100 build/encoder.o
-                0x0000354c                RA
- .bss           0x0000364c        0x0 build/firmware.o
- .bss           0x0000364c        0x0 build/math_ops.o
- .bss           0x0000364c        0x0 build/print.o
- .bss           0x0000364c        0x0 build/sensor.o
- .bss           0x0000364c        0x0 build/tcnt.o
- .bss           0x0000364c        0x0 build/start.o
+.bss            0x00003550      0x400
+ .bss           0x00003550        0x0 build/convert.o
+ .bss           0x00003550      0x400 build/encoder.o
+                0x00003550                RA
+ .bss           0x00003950        0x0 build/firmware.o
+ .bss           0x00003950        0x0 build/math_ops.o
+ .bss           0x00003950        0x0 build/print.o
+ .bss           0x00003950        0x0 build/sensor.o
+ .bss           0x00003950        0x0 build/tcnt.o
+ .bss           0x00003950        0x0 build/start.o
 
-.sbss           0x0000364c       0x14
- .sbss          0x0000364c        0xd build/encoder.o
-                0x0000364c                previous_pixel_r
-                0x0000364d                previous_pixel_g
-                0x0000364e                previous_pixel_b
-                0x0000364f                previous_pixel_a
-                0x00003650                chunk_index
-                0x00003654                chunk_output
-                0x00003658                RLE
- *fill*         0x00003659        0x3 
- .sbss          0x0000365c        0x4 build/firmware.o
-                0x0000365c                counter
+.sbss           0x00003950       0x30
+ .sbss          0x00003950       0x1c build/encoder.o
+                0x00003950                previous_pixel_r
+                0x00003954                previous_pixel_g
+                0x00003958                previous_pixel_b
+                0x0000395c                previous_pixel_a
+                0x00003960                chunk_index
+                0x00003964                chunk_output
+                0x00003968                RLE
+ .sbss          0x0000396c       0x14 build/firmware.o
+                0x0000396c                counter
+                0x00003970                r
+                0x00003974                g
+                0x00003978                b
+                0x0000397c                a
 
 /DISCARD/
  *(.note*)

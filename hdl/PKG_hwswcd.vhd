@@ -136,7 +136,11 @@ package PKG_hwswcd is
             sys_clock : in STD_LOGIC;
             sys_reset : in STD_LOGIC;
             external_irq : in STD_LOGIC;
-            gpio_leds : out STD_LOGIC_VECTOR(31 downto 0)
+            gpio_leds : out STD_LOGIC_VECTOR(31 downto 0);
+            dmem_di_e : out STD_LOGIC_VECTOR(31 downto 0);
+            dmem_a_e : out STD_LOGIC_VECTOR(31 downto 0);
+            dmem_we_e : out STD_LOGIC;
+            cpu_clock : out STD_LOGIC
         );
     end component riscv_microcontroller;
 
